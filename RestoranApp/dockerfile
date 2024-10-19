@@ -1,0 +1,21 @@
+# PHP imajını belirtiyoruz
+FROM php:8.2-apache
+
+# Gerekli paketleri ve PHP uzantılarını kuruyoruz
+RUN apt-get update && apt-get install -y \
+    libsqlite3-dev \
+    && docker-php-ext-install pdo pdo_sqlite
+
+# Proje dosyalarını kopyalıyoruz
+COPY . /var/www/html/
+
+# Çalışma dizinini ayarlıyoruz
+WORKDIR /var/www/html
+
+# Dosya izinlerini ayarlıyoruz
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
+
+# Apache'yi başlatıyoruz
+EXPOSE 80
+CMD ["apache2-foreground"]
